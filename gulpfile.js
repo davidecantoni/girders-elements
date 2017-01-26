@@ -13,4 +13,4 @@ gulp.task('build-es5', () => {
     .pipe(gulp.dest('dist/es5'));
 });
 
-gulp.task('clean', () => del(['dist']));
+gulp.task('clean', () => del(['dist/**/*', 'dist']));
