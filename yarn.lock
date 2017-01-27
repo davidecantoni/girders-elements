@@ -63,6 +63,10 @@ ansi-styles@^2.2.1:
   version "2.2.1"
   resolved "https://repo.netcetera.com/nexus/content/groups/public_npm/ansi-styles/-/ansi-styles-2.2.1.tgz#b432dd3358b634cf75e1e4664368240533c1ddbe"
 
+any-shell-escape@^0.1.1:
+  version "0.1.1"
+  resolved "https://repo.netcetera.com/nexus/content/groups/public_npm/any-shell-escape/-/any-shell-escape-0.1.1.tgz#d55ab972244c71a9a5e1ab0879f30bf110806959"
+
 anymatch@^1.3.0:
   version "1.3.0"
   resolved "https://repo.netcetera.com/nexus/content/groups/public_npm/anymatch/-/anymatch-1.3.0.tgz#a3e52fa39168c825ff57b0248126ce5a8ff95507"
@@ -641,7 +645,7 @@ babel-template@^6.22.0:
     babylon "^6.11.0"
     lodash "^4.2.0"
 
-babel-traverse@^6.15.0, babel-traverse@^6.16.0, babel-traverse@^6.18.0, babel-traverse@^6.21.0:
+babel-traverse@^6.15.0, babel-traverse@^6.16.0, babel-traverse@^6.21.0:
   version "6.21.0"
   resolved "https://repo.netcetera.com/nexus/content/groups/public_npm/babel-traverse/-/babel-traverse-6.21.0.tgz#69c6365804f1a4f69eb1213f85b00a818b8c21ad"
   dependencies:
@@ -655,7 +659,7 @@ babel-traverse@^6.15.0, babel-traverse@^6.16.0, babel-traverse@^6.18.0, babel-tr
     invariant "^2.2.0"
     lodash "^4.2.0"
 
-babel-traverse@^6.22.0:
+babel-traverse@^6.18.0, babel-traverse@^6.22.0:
   version "6.22.1"
   resolved "https://repo.netcetera.com/nexus/content/groups/public_npm/babel-traverse/-/babel-traverse-6.22.1.tgz#3b95cd6b7427d6f1f757704908f2fc9748a5f59f"
   dependencies:
@@ -669,7 +673,7 @@ babel-traverse@^6.22.0:
     invariant "^2.2.0"
     lodash "^4.2.0"
 
-babel-types@^6.15.0, babel-types@^6.16.0, babel-types@^6.18.0, babel-types@^6.21.0:
+babel-types@^6.15.0, babel-types@^6.16.0, babel-types@^6.21.0:
   version "6.21.0"
   resolved "https://repo.netcetera.com/nexus/content/groups/public_npm/babel-types/-/babel-types-6.21.0.tgz#314b92168891ef6d3806b7f7a917fdf87c11a4b2"
   dependencies:
@@ -678,7 +682,7 @@ babel-types@^6.15.0, babel-types@^6.16.0, babel-types@^6.18.0, babel-types@^6.21
     lodash "^4.2.0"
     to-fast-properties "^1.0.1"
 
-babel-types@^6.19.0, babel-types@^6.22.0:
+babel-types@^6.18.0, babel-types@^6.19.0, babel-types@^6.22.0:
   version "6.22.0"
   resolved "https://repo.netcetera.com/nexus/content/groups/public_npm/babel-types/-/babel-types-6.22.0.tgz#2a447e8d0ea25d2512409e4175479fd78cc8b1db"
   dependencies:
@@ -1912,6 +1916,15 @@ gulp-command@^0.1.2:
     lodash "^2.4.1"
     minimist "^1.1.0"
 
+gulp-git@^1.12.0:
+  version "1.12.0"
+  resolved "https://repo.netcetera.com/nexus/content/groups/public_npm/gulp-git/-/gulp-git-1.12.0.tgz#a779573d84a344e46d13ecb67182de8e58fcb7f3"
+  dependencies:
+    any-shell-escape "^0.1.1"
+    gulp-util "^3.0.6"
+    require-dir "^0.1.0"
+    through2 "^0.6.5"
+
 gulp-sourcemaps@^2.4.0:
   version "2.4.0"
   resolved "https://repo.netcetera.com/nexus/content/groups/public_npm/gulp-sourcemaps/-/gulp-sourcemaps-2.4.0.tgz#9ce8fcf9ab29769819dff04ca781976072838979"
@@ -1927,7 +1940,7 @@ gulp-sourcemaps@^2.4.0:
     through2 "2.X"
     vinyl "1.X"
 
-gulp-util@^3.0.0:
+gulp-util@^3.0.0, gulp-util@^3.0.6:
   version "3.0.8"
   resolved "https://repo.netcetera.com/nexus/content/groups/public_npm/gulp-util/-/gulp-util-3.0.8.tgz#0054e1e744502e27c04c187c3ecc505dd54bbb4f"
   dependencies:
@@ -3623,6 +3636,10 @@ request@^2.79.0:
     tunnel-agent "~0.4.1"
     uuid "^3.0.0"
 
+require-dir@^0.1.0:
+  version "0.1.0"
+  resolved "https://repo.netcetera.com/nexus/content/groups/public_npm/require-dir/-/require-dir-0.1.0.tgz#81e01e299faf5b74c34b6594f8e5add5985ddec5"
+
 require-directory@^2.1.1:
   version "2.1.1"
   resolved "https://repo.netcetera.com/nexus/content/groups/public_npm/require-directory/-/require-directory-2.1.1.tgz#8c64ad5fd30dab1c976e2344ffe7f792a6a6df42"
@@ -4019,7 +4036,7 @@ through2@2.X, through2@^2.0.0:
     readable-stream "^2.1.5"
     xtend "~4.0.1"
 
-through2@^0.6.1:
+through2@^0.6.1, through2@^0.6.5:
   version "0.6.5"
   resolved "https://repo.netcetera.com/nexus/content/groups/public_npm/through2/-/through2-0.6.5.tgz#41ab9c67b29d57209071410e1d7a7a968cd3ad48"
   dependencies:
