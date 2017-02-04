@@ -11,10 +11,13 @@ const {
 const R = require("ramda");
 const del = require('del');
 const inquirer = require('inquirer');
-const {git, versions, eec} = require("./_scripts/versioning");
+const {git, versions} = require("./_scripts/versioning");
 const {task, flow} = require("./_scripts/tasks");
 
-gulp.task('build-es5', () => {
+
+// tasks
+
+task('build-es5', () => {
   return gulp.src('./src/**/*.js')
     .pipe(sourcemaps.init())
       .pipe(babel())
@@ -22,7 +25,7 @@ gulp.task('build-es5', () => {
     .pipe(gulp.dest('dist/es5'));
 });
 
-gulp.task('clean', () => del(['dist/**']));
+task('clean', () => del(['dist/**']));
 
 task('release:check', () => {
   let wrongBranch = R.match(/(develop$|release-.+$)/);
@@ -38,10 +41,10 @@ task('release:check', () => {
   return Promise.all([branchCheck(), tagCheck()]);
 });
 
-gulp.task('release:detach', ['release:check'], () => {
+task('release:detach', ['release:check'], () => {
   return git.detach();
 });
 
-gulp.task('release:verify', ['test']);
+task('release:verify', ['test']);
 
-gulp.task('release:tag');
+task('release:tag');
