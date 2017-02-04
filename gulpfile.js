@@ -12,7 +12,7 @@ const R = require("ramda");
 const del = require('del');
 const tagVersion = require('gulp-tag-version');
 const inquirer = require('inquirer');
-const {git, exec} = require("./_scripts/versioning")
+const {git, versions, eec} = require("./_scripts/versioning")
 
 gulp.task('build-es5', () => {
   return gulp.src('./src/**/*.js')
@@ -24,18 +24,22 @@ gulp.task('build-es5', () => {
 
 gulp.task('clean', () => del(['dist/**']));
 
-task('release:branch-check', () => {
-  let wrongBranch = R.complement(R.match(/(develop$|release-.+$)/));
+task('release:check', () => {
+  let wrongBranch = R.match(/(develop$|release-.+$)/);
 
-  return git.currentBranch.then(
+  let branchCheck = R.pipeP(
+    git.currentBranch,
     flow.rejectWhen(wrongBranch, "You may push versions only from the 'develop' or a release branch"));
+
+  let tagCheck = R.pipeP(
+    versions.all,
+    flow.rejectWhen(R.any(R.equals(versions.current)), "A tag for the version in package.json already exist. Set a new version first"));
+
+  return Promise.all([branchCheck(), tagCheck()]);
 });
 
-gulp.task('release:detach', ['release:branch-check'], () => {
+gulp.task('release:detach', ['release:check'], () => {
   return git.detach();
-});
-
-gulp.task('release:set-version', ['release:detach'], () => {
 });
 
 gulp.task('release:verify', ['test']);
@@ -43,7 +47,7 @@ gulp.task('release:verify', ['test']);
 gulp.task('release:tag');
 
 const flow = {
-  rejectWhen: R.curry((test, message, v) => test(v) ? v : flow.error(message)),
+  rejectWhen: (test, message) => R.ifElse(test, () => { throw message }, R.identity),
   error: (message) => { throw message }
 };
 
