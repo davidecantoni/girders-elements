@@ -8,12 +8,11 @@ const {
   log,
   colors
 } = util;
-
-
+const R = require("ramda");
 const del = require('del');
-const nodeExec = require('child_process').exec;
 const tagVersion = require('gulp-tag-version');
 const inquirer = require('inquirer');
+const {git, exec} = require("./_scripts/versioning")
 
 gulp.task('build-es5', () => {
   return gulp.src('./src/**/*.js')
@@ -26,13 +25,10 @@ gulp.task('build-es5', () => {
 gulp.task('clean', () => del(['dist/**']));
 
 task('release:branch-check', () => {
-  return git.currentBranch().then(
-      branch => {
-        if (branch.match(/(develop$|release-.+$)/) == null) {
-          throw "You may push versions only from the 'develop' or a release branch";
-        }
-        return branch;
-      });
+  let wrongBranch = R.complement(R.match(/(develop$|release-.+$)/));
+
+  return git.currentBranch.then(
+    flow.rejectWhen(wrongBranch, "You may push versions only from the 'develop' or a release branch"));
 });
 
 gulp.task('release:detach', ['release:branch-check'], () => {
@@ -40,44 +36,16 @@ gulp.task('release:detach', ['release:branch-check'], () => {
 });
 
 gulp.task('release:set-version', ['release:detach'], () => {
-  return versioning.newVersion().then(
-    ({version, nextVersion}) => {
-
-    }
-  ));
 });
 
 gulp.task('release:verify', ['test']);
 
 gulp.task('release:tag');
 
-
-const git = {
-  currentBranch: () => exec('git rev-parse --abbrev-ref HEAD'),
-  detach: () => exec('git checkout --detach')
+const flow = {
+  rejectWhen: R.curry((test, message, v) => test(v) ? v : flow.error(message)),
+  error: (message) => { throw message }
 };
-
-const version = {
-  askVersion: (current) => inquirer.prompt([
-    {
-      name: "asIs",
-      message: "Use current "
-    }
-  ])
-};
-
-function exec(command) {
-  return new Promise((resolve, reject) => {
-    nodeExec(command, (error, stdout, stderr) => {
-      if (error) {
-        log(color.bold.red(stderr));
-        reject(error);
-      } else {
-        resolve(stdout && stdout.trim());
-      }
-    });
-  });
-}
 
 function task(name, deps, fn) {
   let [n, d] = [name, deps];
