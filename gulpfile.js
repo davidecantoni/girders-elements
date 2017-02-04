@@ -10,9 +10,9 @@ const {
 } = util;
 const R = require("ramda");
 const del = require('del');
-const tagVersion = require('gulp-tag-version');
 const inquirer = require('inquirer');
-const {git, versions, eec} = require("./_scripts/versioning")
+const {git, versions, eec} = require("./_scripts/versioning");
+const {task, flow} = require("./_scripts/tasks");
 
 gulp.task('build-es5', () => {
   return gulp.src('./src/**/*.js')
@@ -45,36 +45,3 @@ gulp.task('release:detach', ['release:check'], () => {
 gulp.task('release:verify', ['test']);
 
 gulp.task('release:tag');
-
-const flow = {
-  rejectWhen: (test, message) => R.ifElse(test, () => { throw message }, R.identity),
-  error: (message) => { throw message }
-};
-
-function task(name, deps, fn) {
-  let [n, d] = [name, deps];
-  let ff;
-
-  if (typeof fn === 'function') {
-    ff = fn;
-  } else if (typeof deps === 'function') {
-    ff = deps;
-    d = undefined;
-  }
-
-  let f;
-  if (ff) {
-    f = function() {
-      const res = ff();
-      log("in wrapper, res = ", res);
-
-      if (res instanceof Promise) {
-        return res.catch(err => Promise.reject(new util.PluginError({
-          plugin: name,
-          message: err
-        })));
-      }
-    }
-  }
-  return gulp.task(n, d || f, d && f);
-}
