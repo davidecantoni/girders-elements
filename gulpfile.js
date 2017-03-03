@@ -4,15 +4,15 @@ const gulp = require('gulp');
 const babel = require('gulp-babel');
 const sourcemaps = require('gulp-sourcemaps');
 const util = require('gulp-util');
+const bump = require("bump-regex");
 const {
   log,
   colors
 } = util;
 const R = require("ramda");
 const del = require('del');
-const inquirer = require('inquirer');
 const {git, versions} = require("./_scripts/versioning");
-const {task, flow} = require("./_scripts/tasks");
+const {task, flow, applyWithPromise} = require("./_scripts/tasks");
 
 
 // tasks
@@ -34,11 +34,15 @@ task('release:check', () => {
     git.currentBranch,
     flow.rejectWhen(wrongBranch, "You may push versions only from the 'develop' or a release branch"));
 
-  let tagCheck = R.pipeP(
-    versions.all,
-    flow.rejectWhen(R.any(R.equals(versions.current)), "A tag for the version in package.json already exist. Set a new version first"));
+  return branchCheck();
+});
 
-  return Promise.all([branchCheck(), tagCheck()]);
+task('release:bump-version', () => {
+  log(colors.bold.green("The current version is "), colors.bold.white(versions.currentVersion));
+
+  return gulp.src("./package.json")
+    .pipe(applyWithPromise(bumpToVersion, versions.queryReleaseVersion()))
+    .pipe(gulp.dest("dist/tmp"));
 });
 
 task('release:detach', ['release:check'], () => {
