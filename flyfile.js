@@ -107,11 +107,14 @@ module.exports = {
     yield git.tag(packageFile.version);
   },
 
-  *mergeCurrentToMaster(fly) {
+  *mergeCurrentToMaster(fly, {startingBranch}) {
+
+    if (startingBranch == null) throw new Error("This task is not standalone, run the versioning task");
+
     const packageFile = JSON.parse(yield fly.$.read("./package.json"))
 
     yield git.checkout('master')
-    yield git.merge(`v${packageFile.version}`, `Pushed release ${packageFile.version}.`)
+    yield git.merge(startingBranch, `Pushed release ${packageFile.version}.`)
 
   },
 
