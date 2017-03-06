@@ -30,7 +30,7 @@ module.exports = {
 
   *test(fly) {
     /* @desc runs the tests */
-    
+
     const oldEnv = process.env.BABEL_ENV;
     process.env.BABEL_ENV = "test";
 
@@ -91,8 +91,10 @@ module.exports = {
   },
 
   *tagCurrentVersion(fly) {
-    const packageFile = JSON.parse(yield fly.$.read("./package.json"))
-    const exists = R.contains(packageFile.version, yield versions.all)
+    const packageString = yield fly.$.read("./package.json")
+    const packageFile = JSON.parse(packageString)
+    const taggedVersions = yield versions.all()
+    const exists = R.contains(packageFile.version, taggedVersions)
 
     if (exists) throw new Error(`A tag alredy exists for the version ${packageFile.version}`);
 
