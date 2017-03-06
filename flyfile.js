@@ -70,6 +70,8 @@ module.exports = {
     const {$} = fly;
     const bumpVersion = $.promisify(bump);
 
+    yield wait(1);
+
     $.log("Curent Version: ", chalk.bold(versions.current));
     const {releaseVersion} = yield versions.queryReleaseVersion();
 
@@ -117,4 +119,8 @@ module.exports = {
     yield git.checkout(startingBranch)
     yield git.merge('master')
   }
+}
+
+function wait(secs) {
+  return new Promise(resolve => setTimeout(resolve, secs * 1000));
 }
