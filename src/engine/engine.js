@@ -1,8 +1,7 @@
 'use strict';
 
-import React, {Component} from 'react';
+import React, {Component, Children} from 'react';
 import { compose, createStore, applyMiddleware } from 'redux';
-import { Provider } from 'react-redux';
 import createSagaMiddleware from 'redux-saga';
 import { fromJS } from 'immutable';
 import Cursor from 'immutable/contrib/cursor';
@@ -16,7 +15,7 @@ const sagaMiddleware = createSagaMiddleware();
 
 const buildStore = (initialAppState) => {
   const storeFactory = compose(
-      applyMiddleware(sagaMiddleware)
+    applyMiddleware(sagaMiddleware)
   )(createStore);
 
   return storeFactory(reducer, initialAppState);
@@ -30,40 +29,69 @@ function createState(initState) {
   const immutableInitState = toImmutable(initState);
   const store = buildStore(Cursor.from(immutableInitState));
   return {
-    store: store,
-    initState: immutableInitState
+    store: store
   };
 }
+
+class ContextWrapper extends Component {
+  getChildContext() {
+    return { store: this.store }
+  }
+
+  constructor(props, context) {
+    super(props, context);
+    this.store = props.store;
+  }
+
+  render() {
+    if (!this.props.children) {
+      return null;
+    }
+    return Children.only(this.props.children);
+  }
+}
+
+ContextWrapper.childContextTypes = {
+  store: React.PropTypes.any
+};
+
+ContextWrapper.propTypes = {
+  store: React.PropTypes.any.isRequired,
+  children: React.PropTypes.any
+};
 
 export default class Engine extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = createState(props.initState);
-  }
-
-  updateComponentState() {
-    const store = this.state.store;
-    const newState = toImmutable(store.getState());
-    this.setState({store, initState: newState})
-  }
-
-  componentWillMount() {
     sagaMiddleware.run(watchReadPerform);
-     this.state.store.subscribe(this.updateComponentState.bind(this));
+    this.unsubscribe = this.state.store.subscribe(this._reRender.bind(this));
+  }
+
+  shouldComponentUpdate() {
+    return true;
   }
 
   componentWillReceiveProps(nextProps) {
     const newState = toImmutable(nextProps.initState);
-    if (!this.state.initState.equals(newState)) {
+    if (!this.state.store.getState().equals(newState)) {
       this.setState(createState(newState));
     }
   }
 
+  _reRender() {
+    this.forceUpdate();
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
+
   render() {
     return (
-        <Provider store={this.state.store}>
-          { ui.forElement(Cursor.from(this.state.initState)) }
-        </Provider>
+      <ContextWrapper store={this.state.store}>
+        { ui.forElement(this.state.store.getState()) }
+      </ContextWrapper>
     );
   }
 }
