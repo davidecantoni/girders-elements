@@ -20,9 +20,10 @@ const isPreRelease = R.complement(isRelease);
 const currentBranch = () => exec('git rev-parse --abbrev-ref HEAD');
 const detach = () => exec('git checkout --detach');
 const tag_ = () => exec('git tag');
-const commit = (file, msg) => exec(`git commit ${file} -m "${msg}"`)
-const merge = (branch, msg) => exec(`git merge --no-ff ${branch} -m "${msg}"`)
-const checkout = branch => exec(`git checkout ${branch}`)
+const commit = (file, msg) => exec(`git commit ${file} -m "${msg}"`);
+const merge = (branch, msg) => exec(`git merge --no-ff ${branch} -m "${msg}"`);
+const mergeFf = (branch) => exec(`git merge --ff ${branch}`);
+const checkout = branch => exec(`git checkout ${branch}`);
 const status = () => exec(`git status --porcelain`);
 const isClean = R.pipeP(status, R.isEmpty);
 
@@ -78,9 +79,9 @@ module.exports = {
     tag,
     commit,
     merge,
+    mergeFf,
     checkout,
     tags,
-    tag,
     status,
     isClean
   },

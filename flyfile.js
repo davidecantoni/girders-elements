@@ -49,8 +49,10 @@ module.exports = {
       'test',
       'detach',
       'bumpVersion',
+      'mergeCurrentToMaster',
       'tagCurrentVersion',
-      'mergeCurrentToMaster'
+      'mergeMasterToBranch',
+      'allDone'
     ],
     { startingBranch: yield git.currentBranch()})
   },
@@ -113,11 +115,15 @@ module.exports = {
 
   },
 
-  *mergeMergeToBranch(fly, opts) {
+  *mergeMasterToBranch(fly, opts) {
     let {startingBranch} = opts;
     startingBranch = startingBranch || 'develop'
     yield git.checkout(startingBranch)
-    yield git.merge('master')
+    yield git.mergeFf('master')
+  },
+
+  *allDone(fly) {
+    yield fly.$.alert("Versioning is done! Check your git tree and push when ready.")
   }
 }
 
