@@ -10,8 +10,8 @@
     "coverage-report": "nyc report --reporter=text-lcov | coveralls",
     "lint": "eslint .",
     "lint-stats": "eslint . --format node_modules/eslint-stats/byErrorAndWarning.js",
-    "clean": "gulp clean",
-    "prepublish": "gulp clean build-es5"
+    "clean": "fly clean",
+    "prepublish": "fly clean build-es5"
   },
   "repository": {
     "type": "git",
@@ -58,7 +58,7 @@
     "eslint-plugin-react": "^6.7.1",
     "eslint-plugin-redux-saga": "^0.1.4",
     "eslint-stats": "^0.1.4",
-    "fly": "^2.0.4",
+    "fly": "^2.0.5",
     "fly-babel": "^2.1.1",
     "fly-clear": "^1.0.1",
     "fly-watch": "^1.1.1",
