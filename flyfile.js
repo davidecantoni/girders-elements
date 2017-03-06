@@ -13,6 +13,8 @@ require("babel-register");
 module.exports = {
 
   *es5(fly) {
+    /* @desc Transpiles the project into ES5, for browser use */
+
     yield fly
       .source(['index.js', 'src/**/*.js'])
       .babel({
@@ -22,10 +24,13 @@ module.exports = {
   },
 
   *clean(fly) {
+    /* @desc cleans */
     yield fly.clear(dist);
   },
 
   *test(fly) {
+    /* @desc runs the tests */
+    
     const oldEnv = process.env.BABEL_ENV;
     process.env.BABEL_ENV = "test";
 
@@ -36,7 +41,7 @@ module.exports = {
   },
 
   *release(fly) {
-    fly.serial([
+    yield fly.serial([
       'checkBranch',
       'es5',
       'test',
