@@ -41,10 +41,15 @@ module.exports = {
   },
 
   *release(fly) {
-    yield fly.serial([
+    /* @desc performs a new release */
+
+    yield fly.parallel([
       'checkBranch',
       'es5',
-      'test',
+      'test'
+    ]);
+
+    yield fly.serial([
       'detach',
       'bumpVersion',
       'tagCurrentVersion',
