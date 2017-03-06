@@ -8,6 +8,8 @@ const bump = require("bump-regex");
 const dist = 'dist';
 const distEs5 = `${dist}/es5`;
 
+require("babel-register");
+
 module.exports = {
 
   *es5(fly) {
@@ -23,9 +25,20 @@ module.exports = {
     yield fly.clear(dist);
   },
 
+  *test(fly) {
+    const oldEnv = process.env.BABEL_ENV;
+    process.env.BABEL_ENV = "test";
+
+    yield fly.source("./test/**/*.spec.js")
+      .mocha()
+
+    process.env.BABEL_ENV = oldEnv;
+  },
+
   *release(fly) {
     fly.serial([
       'checkBranch',
+      'es5',
       'test',
       'detach',
       'bumpVersion',

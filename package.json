@@ -5,13 +5,13 @@
   "main": "src/index.js",
   "browser": "dist/es5/index.js",
   "scripts": {
-    "test": "cross-env BABEL_ENV=test mocha --recursive --compilers js:babel-core/register --require test/support/utils",
+    "test": "fly test",
     "coverage": "nyc npm test",
     "coverage-report": "nyc report --reporter=text-lcov | coveralls",
     "lint": "eslint .",
     "lint-stats": "eslint . --format node_modules/eslint-stats/byErrorAndWarning.js",
     "clean": "fly clean",
-    "prepublish": "fly clean build-es5"
+    "prepublish": "fly clean es5"
   },
   "repository": {
     "type": "git",
@@ -45,6 +45,7 @@
     "babel-eslint": "^7.1.0",
     "babel-plugin-transform-runtime": "^6.12.0",
     "babel-preset-react-native": "^1.9.1",
+    "babel-register": "^6.23.0",
     "bump-regex": "^2.6.1",
     "chai": "^3.5.0",
     "chai-enzyme": "^0.5.0",
@@ -61,6 +62,7 @@
     "fly": "^2.0.5",
     "fly-babel": "^2.1.1",
     "fly-clear": "^1.0.1",
+    "fly-mocha": "^1.0.2",
     "fly-watch": "^1.1.1",
     "inquirer": "^3.0.1",
     "mocha": "^2.5.3",
