@@ -24,7 +24,7 @@ const commit = (file, msg) => exec(`git commit -a ${file} -m "${msg}"`)
 const merge = (branch, msg) => exec(`git merge --no-ff ${branch} -m ${msg}`)
 const checkout = branch => exec(`git checkout ${branch}`)
 const status = () => exec(`git status --porcelain`);
-const isClean = R.pipeP(status, R.split('\n'), R.isEmpty);
+const isClean = R.pipeP(status, R.isEmpty);
 
 
 // tag processing
