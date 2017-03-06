@@ -20,9 +20,17 @@ const isPreRelease = R.complement(isRelease);
 const currentBranch = () => exec('git rev-parse --abbrev-ref HEAD');
 const detach = () => exec('git checkout --detach');
 const tag_ = () => exec('git tag');
+const commit = (file, msg) => exec(`git commit -a ${file} -m "${msg}"`)
+const merge = (branch, msg) => exec(`git merge --no-ff ${branch} -m ${msg}`)
+const checkout = branch => exec(`git checkout ${branch}`)
+const status = () => exec(`git status --porcelain`);
+const isClean = R.pipeP(status, R.split('\n'), R.isEmpty);
+
+
+// tag processing
+
 const tags = R.pipeP(tag_, R.split("\n"));
 const tag = version => exec(`git tag v${version}`)
-const commit = (file, msg) => exec(`git commit -a ${file} -m ${msg}`)
 
 const versions = R.pipeP(tags, R.filter(all), R.map(semver.valid), R.uniq);
 const preReleaseVersions = prefix => versions().then(R.pipe(R.filter(pre(prefix)), R.sort(semver.compare)));
@@ -69,8 +77,12 @@ module.exports = {
     detach,
     tag,
     commit,
+    merge,
+    checkout,
     tags,
-    tagVersion
+    tag,
+    status,
+    isClean
   },
 
   versions: {
