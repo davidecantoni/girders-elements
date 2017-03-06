@@ -38,7 +38,9 @@ module.exports = {
   *checkBranch(fly) {
     const currentBranch = yield git.currentBranch();
     const workCopyClean = yield git.isClean();
-    const wrongBranch = R.match(/(develop$|release-.+$)/);
+    const wrongBranch = R.pipe(R.match(/^(develop|release-.+)$/), R.isEmpty);
+
+    fly.$.log('Current branch: ', currentBranch);
 
     if (wrongBranch(currentBranch)) throw new Error('You may push versions only from the "develop" or a release branch');
     if (!workCopyClean) throw new Error('Your working copy is not clean');
@@ -93,6 +95,4 @@ module.exports = {
     yield git.checkout(startingBranch)
     yield git.merge('master')
   }
-
-
 }
