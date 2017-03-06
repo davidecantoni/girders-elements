@@ -110,7 +110,7 @@ module.exports = {
     const packageFile = JSON.parse(yield fly.$.read("./package.json"))
 
     yield git.checkout('master')
-    yield git.merge(`v${packageFile.version}`, "Pushed release ${packageFile.version}.")
+    yield git.merge(`v${packageFile.version}`, `Pushed release ${packageFile.version}.`)
 
   },
 
