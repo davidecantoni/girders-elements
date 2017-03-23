@@ -4,6 +4,11 @@ const R = require('ramda');
 const {git, versions} = require("./scripts/versioning");
 const chalk = require("chalk");
 const bump = require("bump-regex");
+const standardChangelog = require('standard-changelog');
+const fs = require('fs');
+const tempfile = require('tempfile');
+const addStream = require('add-stream');
+const Readable = require('stream').Readable;
 
 const dist = 'dist';
 const distEs5 = `${dist}/es5`;
@@ -40,7 +45,7 @@ module.exports = {
     process.env.BABEL_ENV = oldEnv;
   },
 
-  *release(fly) {
+  *version(fly) {
     /* @desc performs a new release */
 
     yield fly.serial([
@@ -49,6 +54,7 @@ module.exports = {
       'test',
       'detach',
       'bumpVersion',
+      'updateChangeLog',
       'mergeCurrentToMaster',
       'tagCurrentVersion',
       'mergeMasterToBranch',
@@ -124,6 +130,14 @@ module.exports = {
     yield git.checkout(startingBranch)
     yield git.mergeFf('master')
   },
+
+  *updateChangeLog(fly) {
+    const temp = tempfile();
+
+    const stream = standardChangelog();
+    const out = fs.createWriteStream(tmpFile);
+
+  }
 
   *allDone(fly) {
     yield fly.$.alert("Versioning is done! Check your git tree and push when ready.")
